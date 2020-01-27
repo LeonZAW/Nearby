@@ -27,6 +27,7 @@ const (
 	PROJECT_ID  = "nearby-2020123"
 	BUCKET_NAME = "post-images-2020123"
 	ES_URL      = "http://35.232.233.155:9200"
+	API_PREFIX  = "/api/v1"
 )
 
 var mySigningKey = []byte("apple")
@@ -101,13 +102,16 @@ func main() {
 		SigningMethod: jwt.SigningMethodHS256,
 	})
 
-	r.Handle("/post", jwtMiddleware.Handler(http.HandlerFunc(handlerPost)))
-	r.Handle("/search", jwtMiddleware.Handler(http.HandlerFunc(handlerSearch)))
-	r.Handle("/login", http.HandlerFunc(loginHandler))
-	r.Handle("/signup", http.HandlerFunc(signupHandler))
-	r.Handle("/cluster", jwtMiddleware.Handler(http.HandlerFunc(handlerCluster)))
+	r.Handle(API_PREFIX+"/post", jwtMiddleware.Handler(http.HandlerFunc(handlerPost)))
+	r.Handle(API_PREFIX+"/search", jwtMiddleware.Handler(http.HandlerFunc(handlerSearch)))
+	r.Handle(API_PREFIX+"/login", http.HandlerFunc(loginHandler))
+	r.Handle(API_PREFIX+"/signup", http.HandlerFunc(signupHandler))
+	r.Handle(API_PREFIX+"/cluster", jwtMiddleware.Handler(http.HandlerFunc(handlerCluster)))
 
-	http.Handle("/", r)
+	// Backend endpoints
+	http.Handle(API_PREFIX+"/", r)
+	// Frontend endpoints
+	http.Handle("/", http.FileServer(http.Dir("build")))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
@@ -319,7 +323,7 @@ func handlerCluster(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	term := r.URL.Query.Get("term")
+	term := r.URL.Query().Get("term")
 
 	//Create a client
 	client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
@@ -330,7 +334,7 @@ func handlerCluster(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Range query
-	q := elastic.NewRangeQuery(term).Gte(0.9)
+	q := elastic.NewRangeQuery(term).Gte(0.8)
 
 	searchResult, err := client.Search().
 		Index(INDEX).
@@ -340,14 +344,14 @@ func handlerCluster(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		m := fmt.Sprintf("Failed to query ES %v", err)
 		fmt.Println(m)
-		http.Error(w, m, StatusInternalServerError)
+		http.Error(w, m, http.StatusInternalServerError)
 	}
 
 	// searchResult is of type SearchResult and returns his, suggestion,
 	// and all kinds of other information from Elasticsearch.
 	fmt.Printf("Query took %d milliseconds\n", searchResult.TookInMillis)
 	// TotalHits is another convenience function that works even when something goes wrong
-	fmt.Printf("Found a total of %d post\n", searchResults.TotalHits())
+	fmt.Printf("Found a total of %d post\n", searchResult.TotalHits())
 
 	// Each is a convenience function that iterates over hits in a search result
 	// It makes sure you don't need to check for nil values in the response

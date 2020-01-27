@@ -15,7 +15,7 @@ import (
 
 type Prediction struct {
 	Prediction int       `json:"prediction"`
-	Key        strings   `json:"key"`
+	Key        string    `json:"key"`
 	Scores     []float64 `json:"scores"`
 }
 
@@ -71,7 +71,7 @@ func annotate(r io.Reader) (float64, error) {
 	req, _ := http.NewRequest("POST", url, strings.NewReader(string(body)))
 	req.Header.Set("Authorization", "Bearer "+tt.AccessToken)
 
-	fmt.Printf("Sending request to ml engine for prediction %s with token as %s\n", rul, tt.AccessToken)
+	fmt.Printf("Sending request to ml engine for prediction %s with token as %s\n", url, tt.AccessToken)
 	//Send request to Google
 	client := &http.Client{}
 	res, err := client.Do(req)
@@ -100,7 +100,7 @@ func annotate(r io.Reader) (float64, error) {
 	}
 
 	fmt.Printf("Received a prediction %v\n", resp.Predictions)
-	resutls := resp.Predictions[0]
+	results := resp.Predictions[0]
 	fmt.Printf("Received a prediction result %f\n", results.Scores[0])
 	return results.Scores[0], nil
 
