@@ -25,8 +25,7 @@ const (
 	DISTANCE    = "200km"
 	PROJECT_ID  = "nearby-2020123"
 	BUCKET_NAME = "post-images-2020123"
-	//BT_INSTANCE = "around-post"
-	ES_URL = "http://35.222.134.166:9200"
+	ES_URL = "http://35.232.233.155:9200"
 )
 
 var mySigningKey = []byte("apple")
