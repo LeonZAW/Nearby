@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Icon, Input, Button, message } from "antd";
 import { Link } from "react-router-dom";
-import { API_ROOT, TOKEN_KEY } from "../constants";
+import { API_ROOT } from "../constants";
 
 const FormItem = Form.Item;
 

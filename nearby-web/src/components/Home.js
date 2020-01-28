@@ -195,7 +195,7 @@ export class Home extends React.Component {
           </TabPane>
           <TabPane tab="Map" key="3">
             <NearbyMap
-              googleMapURL=""
+              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQSxp3piVNzgNKhZNosTC1fPMuB6WFgfs&v=3.exp&libraries=geometry,drawing,places"
               loadingElement={<div style={{ height: `100%` }} />}
               containerElement={<div style={{ height: `800px` }} />}
               mapElement={<div style={{ height: `100%` }} />}
