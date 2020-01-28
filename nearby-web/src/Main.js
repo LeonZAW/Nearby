@@ -3,7 +3,7 @@ import { Register } from './Register';
 
 export function Main() {
     return (
-        <div>
+        <div className="main">
             <Register/>
         </div>   
     )
