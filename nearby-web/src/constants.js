@@ -1,4 +1,5 @@
-export const API_ROOT = "https://nearby-2020123.appspot.com/api/vi"
+export const API_ROOT = "https://nearby-2020123.appspot.com/api/v1"
+// export const API_ROOT = "http://localhost:8080/api/v1"
 export const TOKEN_KEY = "TOKEN_KEY";
 export const GEO_OPTIONS = {
   enableHighAccuracy: true,
