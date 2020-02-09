@@ -21,12 +21,12 @@ import (
 )
 
 const (
-	INDEX       = "nearby"
+	INDEX       = "nearby2"
 	TYPE        = "post"
 	DISTANCE    = "200km"
 	PROJECT_ID  = "nearby-2020123"
 	BUCKET_NAME = "post-images-2020123"
-	ES_URL      = "http://35.232.233.155:9200"
+	ES_URL      = "http://104.198.241.135:9200"
 	API_PREFIX  = "/api/v1"
 )
 
@@ -111,7 +111,7 @@ func main() {
 	// Backend endpoints
 	http.Handle(API_PREFIX+"/", r)
 	// Frontend endpoints
-	http.Handle("/", http.FileServer(http.Dir("build")))
+	// http.Handle("/", http.FileServer(http.Dir("build")))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
