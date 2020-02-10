@@ -98,6 +98,10 @@ func addUser(user User) bool {
 
 // If signup is successful, a new session is created.
 func signupHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+	
 	fmt.Println("Received one signup request")
 
 	decoder := json.NewDecoder(r.Body)
@@ -120,13 +124,15 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Empty password or username", http.StatusInternalServerError)
 	}
 
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+	
 }
 
 // If login is successful, a new token is created.
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
+	
 	fmt.Println("Received one login request")
 
 	decoder := json.NewDecoder(r.Body)
@@ -152,8 +158,4 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Invalid password or username.")
 		http.Error(w, "Invalid password or username", http.StatusForbidden)
 	}
-
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
 }
