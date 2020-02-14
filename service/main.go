@@ -26,7 +26,7 @@ const (
 	DISTANCE    = "200km"
 	PROJECT_ID  = "nearby-2020123"
 	BUCKET_NAME = "post-images-2020123"
-	ES_URL      = "http://104.198.241.135:9200"
+	ES_URL      = "http://35.222.193.86:9200"
 	API_PREFIX  = "/api/v1"
 )
 
@@ -120,7 +120,9 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
-
+	if r.Method != "POST" {
+		return
+	}
 	user := r.Context().Value("user")
 	claims := user.(*jwt.Token).Claims
 	username := claims.(jwt.MapClaims)["username"]
@@ -251,6 +253,10 @@ func handlerSearch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
 
 	fmt.Println("Received one request for search")
+	if r.Method != "GET" {
+		return
+	}
+
 	lat, _ := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
 	lon, _ := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
 	// range is optional
@@ -316,11 +322,11 @@ func containsFilteredWords(s *string) bool {
 }
 
 func handlerCluster(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received one request for clustering")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
 
+	fmt.Println("Received one request for clustering")
 	if r.Method != "GET" {
 		return
 	}

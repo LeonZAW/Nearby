@@ -101,7 +101,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
-	
+
 	fmt.Println("Received one signup request")
 
 	decoder := json.NewDecoder(r.Body)
@@ -124,7 +124,6 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Empty password or username", http.StatusInternalServerError)
 	}
 
-	
 }
 
 // If login is successful, a new token is created.
@@ -132,7 +131,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
-	
+
 	fmt.Println("Received one login request")
 
 	decoder := json.NewDecoder(r.Body)
