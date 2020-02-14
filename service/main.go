@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/storage"
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
@@ -62,7 +63,7 @@ var (
 
 func main() {
 	// Create a client
-	client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false))
+	client, err := elastic.NewClient(elastic.SetURL(ES_URL), elastic.SetSniff(false), elastic.SetSnifferTimeout(5*time.Second))
 	if err != nil {
 		panic(err)
 	}
