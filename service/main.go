@@ -21,12 +21,12 @@ import (
 )
 
 const (
-	INDEX       = "nearby2"
+	INDEX       = "nearbyv"
 	TYPE        = "post"
 	DISTANCE    = "200km"
 	PROJECT_ID  = "nearby-2020123"
 	BUCKET_NAME = "post-images-2020123"
-	ES_URL      = "http://35.222.193.86:9200"
+	ES_URL      = "http://34.70.52.111:9200"
 	API_PREFIX  = "/api/v1"
 )
 
