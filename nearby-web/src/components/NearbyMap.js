@@ -1,60 +1,48 @@
-import React from "react";
+import React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap } from "react-google-maps";
-import { NearbyMarker } from "./NearbyMarker";
-import { POS_KEY } from "../constants";
 
-class NormalNearbyMap extends React.Component {
-  reloadMarkers = () => {
-    const center = this.getCenter();
-    const radius = this.getRadius();
-    if (this.props.topic === "nearby") {
-      this.props.loadNearbyPosts(center, radius);
-    } else {
-      this.props.loadFacesNearbyTheWorld();
+import { GEO_KEY } from '../constants.js';
+import { NearbyMarker } from './NearbyMarker';
+
+class NearbyMap extends React.Component {
+    reloadMarkers = () => {
+        const center = this.map.getCenter();
+        const location = {lat: center.lat(), lon: center.lng()};
+        const range = this.getRange();
+        this.props.loadNearbyPosts(location, range);
     }
-  };
-
-  getCenter = () => {
-    const center = this.map.getCenter();
-    return { lat: center.lat(), lon: center.lng() };
-  };
-
-  getRadius = () => {
-    const center = this.map.getCenter();
-    const bounds = this.map.getBounds();
-    if (center && bounds) {
-      const ne = bounds.getNorthEast();
-      const right = new window.google.maps.LatLng(center.lat(), ne.lng());
-      return (
-        0.001 *
-        window.google.maps.geometry.spherical.computeDistanceBetween(
-          center,
-          right
-        )
-      );
+    getMapRef = (map) => {
+        this.map = map;
+        window.map = map;
     }
-  };
+    getRange = () => {
+        const google = window.google;
+        const center = this.map.getCenter();
+        const bounds = this.map.getBounds();
+        if (center && bounds) {
+            const ne = bounds.getNorthEast();
+            const right = new google.maps.LatLng(center.lat(), ne.lng());
+            return 0.000621371192 * google.maps.geometry.spherical.computeDistanceBetween(center, right);
+        }
+    }
 
-  getMapRef = mapInstance => {
-    this.map = mapInstance;
-  };
-
-  render() {
-    const { lat, lon: lng } = JSON.parse(localStorage.getItem(POS_KEY));
-    return (
-      <GoogleMap
-        ref={this.getMapRef}
-        defaultZoom={11}
-        defaultCenter={{ lat, lng }}
-        onDragEnd={this.reloadMarkers}
-        onZoomChanged={this.reloadMarkers}
-      >
-        {this.props.posts.map(post => (
-          <NearbyMarker post={post} key={post.url} />
-        ))}
-      </GoogleMap>
-    );
-  }
+    render() {
+        const {lat, lon} = JSON.parse(localStorage.getItem(GEO_KEY));
+        return (
+            <GoogleMap
+                onDragEnd={this.reloadMarkers}
+                onZoomChanged={this.reloadMarkers}
+                ref={this.getMapRef}
+                defaultZoom={11}
+                defaultCenter={{lat: lat, lng: lon}}
+            >
+            {
+                this.props.posts ? this.props.posts.map((post) =>
+                    <NearbyMarker post={post} key={post.url}/>
+                ) : null
+            }
+            </GoogleMap>
+        );
+    }
 }
-
-export const NearbyMap = withScriptjs(withGoogleMap(NormalNearbyMap));
+export const WrappedNearbyMap = withScriptjs(withGoogleMap(NearbyMap)); 
